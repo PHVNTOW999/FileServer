@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from .form import CreateUserFrom
 
@@ -9,16 +9,14 @@ def base(req):
 
 def reg(req):
     form = CreateUserFrom()
-    # form.username = "req.POST['email']"
 
     if req.method == 'POST':
-        print(req.POST['email'])
-        # form.username = 'jjljlbj'
         form = CreateUserFrom(req.POST)
 
         if form.is_valid():
-            # form.initial.username = req.POST['email']
             form.save()
+
+            return redirect('/')
 
     ctx = {'form': form}
     return render(req, 'main/auth/reg.html', ctx)
