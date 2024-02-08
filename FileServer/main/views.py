@@ -1,58 +1,79 @@
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from .form import CreateUserFrom
 
 
-def base(request):
-    return render(request, 'main/base.html')
+def index(request):
+    if request.user.is_authenticated:
+        return render(request, 'main/index.html')
+
+    else:
+        return redirect('reg')
 
 
 def regPage(request):
-    form = CreateUserFrom()
+    if request.user.is_authenticated:
+        return render(request, 'main/index.html')
 
-    if request.method == 'POST':
+    else:
+        form = CreateUserFrom()
 
-        try:
-            if User.objects.get(email=request.POST['email']):
-                messages.error(request,
-                               f'Account with that Email - {User.objects.get(email=request.POST["email"]).email}, '
-                               f' already was created!')
+        if request.method == 'POST':
 
-                ctx = {'form': form}
-                return render(request, 'main/auth/reg.html', ctx)
+            try:
+                if User.objects.get(email=request.POST['email']):
+                    messages.error(request,
+                                   f'Account with that Email - {User.objects.get(email=request.POST["email"]).email}, '
+                                   f' already was created!')
 
-        except User.DoesNotExist:
-            form = CreateUserFrom(request.POST)
+                    ctx = {'form': form}
+                    return render(request, 'main/auth/reg.html', ctx)
 
-            if form.is_valid():
-                user = form.save(commit=False)
-                user.set_password(form.cleaned_data['password1'])
-                user.save()
+            except User.DoesNotExist:
+                form = CreateUserFrom(request.POST)
 
-                messages.success(request, 'Account is created!')
+                if form.is_valid():
+                    user = form.save(commit=False)
+                    user.set_password(form.cleaned_data['password1'])
+                    user.save()
 
-                ctx = {'form': form}
-                return render(request, 'main/auth/reg.html', ctx)
+                    messages.success(request, 'Account is created!')
 
-    ctx = {'form': form}
-    return render(request, 'main/auth/reg.html', ctx)
+                    ctx = {'form': form}
+                    return render(request, 'main/auth/reg.html', ctx)
+
+        ctx = {'form': form}
+        return render(request, 'main/auth/reg.html', ctx)
 
 
-def logPage(request):
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        password = request.POST.get('password')
+def loginPage(request):
+    if request.user.is_authenticated:
+        return render(request, 'main/index.html')
 
-        user = authenticate(request, username=email, password=password)
+    else:
+        if request.method == 'POST':
+            email = request.POST.get('email')
+            password = request.POST.get('password')
 
-        if user is not None:
-            login(request, user)
-            return redirect('index')
+            user = authenticate(request, username=email, password=password)
 
-        else:
-            messages.error(request, 'Username or Password is incorrect')
+            if user is not None:
+                login(request, user)
+                return redirect('index')
 
-    ctx = {'form': 'ooo'}
-    return render(request, 'main/auth/log.html', ctx)
+            else:
+                messages.error(request, 'Username or Password is incorrect')
+
+        ctx = {'form': 'ooo'}
+        return render(request, 'main/auth/login.html', ctx)
+
+
+def logoutUser(request):
+    logout(request)
+    return redirect('login')
+
+
+def error_404(request, exception=None):
+    return redirect('index')

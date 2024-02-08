@@ -1,9 +1,14 @@
-{%  extends 'main/base.html' %}
+{% load static %}
 
-{% block header %}
-
-    <h1 class="text-3xl font-bold underline">
-        Hello world!
-    </h1>
-
-{% endblock %}
+<div class="w-full h-10">
+    <header class="header">
+        <div class="user">
+            {{ request.user }}
+        </div>
+        <a href="{% url 'logout' %}">
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+                Logout
+            </button>
+        </a>
+    </header>
+</div>
