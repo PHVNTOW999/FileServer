@@ -21,7 +21,6 @@
 
                     <!-- Email input -->
                     <div class="relative mb-6" data-te-input-wrapper-init>
-                        {#                        {{ form.email }}#}
                         <input
                                 type="email"
                                 name="email"
@@ -61,6 +60,14 @@
                         </ul>
                     {% endif %}
 
+                    {% if messages %}
+                        <ul class="text-red-700 bg-slate-950 rounded text-center text-lg">
+                            {% for mes in messages %}
+                                <li>{{ mes }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+
                     <!-- Registration button -->
                     <div class="text-center text-white lg:text-left">
                         <input
@@ -76,7 +83,7 @@
                         <p class="text-center mb-0 mt-2 pt-1 text-sm font-semibold">
                             Already have an account -
                             <a
-                                    href="../auth/log.html"
+                                    href="{% url 'log' %}"
                                     class="text-danger transition duration-150 ease-in-out text-rose-700"
                             >Login</a
                             >
@@ -86,22 +93,5 @@
             </div>
         </div>
     </div>
-
-    {#    <h1>Registration</h1>#}
-
-    {#    <form method="POST" action="">#}
-    {#        {% csrf_token %}#}
-    {##}
-    {#            {{ form.email.label }}#}
-    {#        {{ form.email }}#}
-    {##}
-    {#        {{ form.password1.label }}#}
-    {#        {{ form.password1 }}#}
-    {##}
-    {#        {{ form.password2.label }}#}
-    {#        {{ form.password1 }}#}
-    {##}
-    {#        <input type="submit" name="Create User">#}
-    {#    </form>#}
 
 {% endblock %}

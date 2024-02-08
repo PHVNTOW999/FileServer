@@ -7,6 +7,7 @@ from main.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     # pages
-    path('', base, name='base'),
-    path('auth/reg/', reg, name='reg')
+    path('', base, name='index'),
+    path('auth/reg/', regPage, name='reg'),
+    path('auth/log/', logPage, name='log')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
