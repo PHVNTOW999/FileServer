@@ -1,14 +1,31 @@
 {% load static %}
 
-<div class="w-full h-10">
+<div class="w-full h-20">
     <header class="header">
-        <div class="user">
-            {{ request.user }}
-        </div>
-        <a href="{% url 'logout' %}">
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
-                Logout
-            </button>
-        </a>
+        <nav class="flex items-center justify-between flex-wrap bg-slate-950 p-6">
+            <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
+                <div class="menu text-sm lg:flex-grow">
+                    <a href="{% url 'index' %}"
+                       class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">
+                        Home
+                    </a>
+                    <a href="{% url 'folders' %}"
+                       class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">
+                        Folders
+                    </a>
+                    <a href="{% url 'files' %}"
+                       class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white">
+                        Files
+                    </a>
+                </div>
+                <div class="user">
+                    <h1 class="text-white float-left mr-5">{{ request.user }}</h1>
+                    <a href="{% url 'logout' %}"
+                       class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-200 hover:bg-white mt-4 lg:mt-0">
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </nav>
     </header>
 </div>

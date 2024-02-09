@@ -5,12 +5,30 @@ from django.shortcuts import render, redirect
 from .form import CreateUserFrom
 
 
-def index(request):
+def indexPage(request):
     if request.user.is_authenticated:
         return render(request, 'main/index.html')
 
     else:
         return redirect('reg')
+
+
+def foldersPage(request):
+    if request.user.is_authenticated:
+        return render(request, 'main/files.html')
+
+    else:
+        return redirect('reg')
+
+
+def filesPage(request):
+    if request.user.is_authenticated:
+        return render(request, 'main/files.html')
+
+    else:
+        return redirect('reg')
+
+# auth pages
 
 
 def regPage(request):
@@ -75,5 +93,6 @@ def logoutUser(request):
     return redirect('login')
 
 
+# Error 404 page
 def error_404(request, exception=None):
     return redirect('index')
