@@ -2,8 +2,35 @@
 
 {% block ctn %}
 
-    <h1 class="text-3xl font-bold underline">
-{#        Hello world!#}
-    </h1>
+    <div class="folders">
+        <div class="wrap m-10">
+            <div class="createForm">
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    <input type="text"
+                           name="name"
+                           class="w-10/12 bg-white float-left text-black peer block min-h-[auto] rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear motion-reduce:transition-none"
+                           id="exampleFormControlInput2"
+                           placeholder="Folder's name"
+                           required/>
+                    <input type="submit"
+                           name="Create Folder"
+                           class="w-1/6 float-right cursor-pointer inline-block rounded bg-primary px-7 pb-2.5 pt-3 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+                           data-te-ripple-init
+                           data-te-ripple-color="light"
+                           value="Create"/>
+                </form>
+            </div>
+            {% if folders %}
+                <div class="main">
+                    {% for folder in folders %}
+                        <div class="folder">
+                            {{ folder.name }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
 
 {% endblock %}
