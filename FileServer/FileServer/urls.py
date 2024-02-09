@@ -11,6 +11,7 @@ urlpatterns = [
     # pages
     path('', indexPage, name='index'),
     path('folders', foldersPage, name='folders'),
+    path('folder/<uuid:uuid>', folderPage, name='folder'),
     path('files', filesPage, name='files'),
     # auth pages
     path('auth/reg/', regPage, name='reg'),

@@ -1,10 +1,11 @@
 {% extends 'main/base.html' %}
+{% load static %}
 
 {% block ctn %}
 
     <div class="folders">
         <div class="wrap m-10">
-            <div class="createForm">
+            <div class="createForm h-12">
                 <form method="POST" action="">
                     {% csrf_token %}
                     <input type="text"
@@ -15,18 +16,23 @@
                            required/>
                     <input type="submit"
                            name="Create Folder"
-                           class="w-1/6 float-right cursor-pointer inline-block rounded bg-primary px-7 pb-2.5 pt-3 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+                           class="w-1/6 float-right cursor-pointer inline-block rounded px-7 pb-2.5 pt-3 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
                            data-te-ripple-init
                            data-te-ripple-color="light"
                            value="Create"/>
                 </form>
             </div>
             {% if folders %}
-                <div class="main">
+                <div class="main grid grid-cols-8 gap-5 mt-10">
                     {% for folder in folders %}
-                        <div class="folder">
-                            {{ folder.name }}
-                        </div>
+                        <a href="{% url 'folder' folder.uuid %}">
+                            <div class="folder w-32 h-24 bg-slate-600 rounded cursor-pointer hover:text-teal-200">
+                                <div class="folder__img m-auto w-16">
+                                    <img src="{% static 'folderIcon.svg' %}" alt={{ folders.name }}>
+                                </div>
+                                <div class="folder__name text-center truncate m-2">{{ folder.name }}</div>
+                            </div>
+                        </a>
                     {% endfor %}
                 </div>
             {% endif %}

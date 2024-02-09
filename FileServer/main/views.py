@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from .form import CreateUserFrom
-from .models import Folder
+from .models import Folder, File
 
 
 # pages
@@ -32,6 +32,16 @@ def foldersPage(request):
         return redirect('reg')
 
 
+def folderPage(request, uuid):
+    if request.user.is_authenticated:
+        files = File.objects.filter(folders__uuid=uuid, user=request.user)
+        ctx = {'files': files}
+        return render(request, 'main/folder.html', ctx)
+
+    else:
+        return redirect('reg')
+
+
 def filesPage(request):
     if request.user.is_authenticated:
         return render(request, 'main/files.html')
@@ -41,8 +51,6 @@ def filesPage(request):
 
 
 # auth pages
-
-
 def regPage(request):
     if request.user.is_authenticated:
         return render(request, 'main/index.html')
