@@ -1,5 +1,7 @@
 import uuid as uuid
+from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import CASCADE
 
 
 class File(models.Model):
@@ -10,6 +12,14 @@ class File(models.Model):
         blank=False,
         upload_to='media',
         verbose_name='File'
+    )
+
+    user = models.ForeignKey(
+        User,
+        null=False,
+        blank=False,
+        unique=False,
+        on_delete=CASCADE
     )
 
     class Meta:
@@ -28,6 +38,14 @@ class Folder(models.Model):
         null=False,
         blank=False,
         verbose_name="Name"
+    )
+
+    user = models.ForeignKey(
+        User,
+        null=False,
+        blank=False,
+        unique=False,
+        on_delete=CASCADE
     )
 
     class Meta:
