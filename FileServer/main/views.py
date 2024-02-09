@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from .form import CreateUserFrom
+from .models import Folder
 
 
 # pages
@@ -16,7 +17,16 @@ def indexPage(request):
 
 def foldersPage(request):
     if request.user.is_authenticated:
-        return render(request, 'main/files.html')
+
+        # create new folder
+        if request.method == 'POST':
+            Folder.objects.create(name=request.POST.get('name'), user=request.user).save()
+            return redirect(request.path)
+
+        folders = Folder.objects.filter(user=request.user)
+        ctx = {'folders': folders}
+
+        return render(request, 'main/folders.html', ctx)
 
     else:
         return redirect('reg')
@@ -28,6 +38,7 @@ def filesPage(request):
 
     else:
         return redirect('reg')
+
 
 # auth pages
 
@@ -85,8 +96,7 @@ def loginPage(request):
             else:
                 messages.error(request, 'Username or Password is incorrect')
 
-        ctx = {'form': 'ooo'}
-        return render(request, 'main/auth/login.html', ctx)
+        return render(request, 'main/auth/login.html')
 
 
 def logoutUser(request):
