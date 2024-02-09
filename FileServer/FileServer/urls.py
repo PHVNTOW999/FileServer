@@ -3,7 +3,6 @@ from django.contrib import admin
 from django.urls import path
 from FileServer import settings
 from main.views import *
-# from . import views
 
 handler404 = error_404
 

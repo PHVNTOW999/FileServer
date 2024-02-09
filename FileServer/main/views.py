@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from .form import CreateUserFrom
 
 
+# pages
 def indexPage(request):
     if request.user.is_authenticated:
         return render(request, 'main/index.html')

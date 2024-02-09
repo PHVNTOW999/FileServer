@@ -20,7 +20,7 @@ class File(models.Model):
         return f'{self.file}'
 
 
-class Artist(models.Model):
+class Folder(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
 
     name = models.CharField(
