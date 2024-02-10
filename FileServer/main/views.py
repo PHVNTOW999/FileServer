@@ -17,8 +17,6 @@ def indexPage(request):
 
 def foldersPage(request):
     if request.user.is_authenticated:
-
-        # create new folder
         if request.method == 'POST':
             Folder.objects.create(name=request.POST.get('name'), user=request.user).save()
             return redirect(request.path)
@@ -34,9 +32,21 @@ def foldersPage(request):
 
 def folderPage(request, uuid):
     if request.user.is_authenticated:
+
         files = File.objects.filter(folders__uuid=uuid, user=request.user)
         ctx = {'files': files}
+
         return render(request, 'main/folder.html', ctx)
+
+    else:
+        return redirect('reg')
+
+
+def del_folder(request, uuid):
+    if request.user.is_authenticated:
+        Folder.objects.get(uuid=uuid, user=request.user).delete()
+
+        return redirect('folders')
 
     else:
         return redirect('reg')

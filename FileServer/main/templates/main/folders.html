@@ -25,6 +25,9 @@
             {% if folders %}
                 <div class="main grid grid-cols-8 gap-5 mt-10">
                     {% for folder in folders %}
+                        <div class="folder__del">
+                            <a href="{% url 'del_folder' folder.uuid %}">delete</a>
+                        </div>
                         <a href="{% url 'folder' folder.uuid %}">
                             <div class="folder w-32 h-24 bg-slate-600 rounded cursor-pointer hover:text-teal-200">
                                 <div class="folder__img m-auto w-16">

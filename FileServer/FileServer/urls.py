@@ -10,8 +10,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # pages
     path('', indexPage, name='index'),
+    # folders
     path('folders', foldersPage, name='folders'),
     path('folder/<uuid:uuid>', folderPage, name='folder'),
+    path('folder/del/<uuid:uuid>', del_folder, name='del_folder'),
+    # files
     path('files', filesPage, name='files'),
     # auth pages
     path('auth/reg/', regPage, name='reg'),
