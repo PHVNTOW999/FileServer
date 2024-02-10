@@ -24,7 +24,7 @@ def foldersPage(request):
         folders = Folder.objects.filter(user=request.user)
         ctx = {'folders': folders}
 
-        return render(request, 'main/folders.html', ctx)
+        return render(request, 'main/folders/folders.html', ctx)
 
     else:
         return redirect('reg')
@@ -36,7 +36,7 @@ def folderPage(request, uuid):
         files = File.objects.filter(folders__uuid=uuid, user=request.user)
         ctx = {'files': files}
 
-        return render(request, 'main/folder.html', ctx)
+        return render(request, 'main/folders/folder.html', ctx)
 
     else:
         return redirect('reg')
@@ -54,7 +54,36 @@ def del_folder(request, uuid):
 
 def filesPage(request):
     if request.user.is_authenticated:
-        return render(request, 'main/files.html')
+        files = File.objects.filter(user=request.user)
+        folders = Folder.objects.filter(user=request.user)
+        ctx = {'data': {'files': files, 'folders': folders}}
+
+        return render(request, 'main/files/files.html', ctx)
+
+    else:
+        return redirect('reg')
+
+
+def fileUpdate(request, uuid):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            file = File.objects.get(uuid=uuid, user=request.user)
+            folder = Folder.objects.get(uuid=request.POST.get('folder'), user=request.user)
+            file.folder = folder
+            file.save()
+
+        return redirect('files')
+
+    else:
+        return redirect('reg')
+
+
+def del_file(request, uuid):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            File.objects.get(uuid=uuid, user=request.user).delete()
+
+        return redirect('files')
 
     else:
         return redirect('reg')

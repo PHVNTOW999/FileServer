@@ -16,6 +16,8 @@ urlpatterns = [
     path('folder/del/<uuid:uuid>', del_folder, name='del_folder'),
     # files
     path('files', filesPage, name='files'),
+    path('file/<uuid:uuid>', fileUpdate, name='fileUpdate'),
+    path('file/del/<uuid:uuid>', del_file, name='del_file'),
     # auth pages
     path('auth/reg/', regPage, name='reg'),
     path('auth/login/', loginPage, name='login'),

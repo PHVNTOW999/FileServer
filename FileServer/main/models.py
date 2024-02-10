@@ -1,3 +1,4 @@
+import os
 import uuid as uuid
 from django.contrib.auth.models import User
 from django.db import models
@@ -33,6 +34,13 @@ class Folder(models.Model):
 class File(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
 
+    name = models.CharField(
+        max_length=155,
+        null=True,
+        blank=True,
+        verbose_name="Name"
+    )
+
     file = models.FileField(
         null=False,
         blank=False,
@@ -40,11 +48,13 @@ class File(models.Model):
         verbose_name='File'
     )
 
-    folders = models.ManyToManyField(
+    folder = models.ForeignKey(
         Folder,
+        default=None,
         null=True,
         blank=True,
-        verbose_name="Folders",
+        verbose_name="Folder",
+        on_delete=models.SET_NULL
     )
 
     user = models.ForeignKey(
@@ -59,5 +69,8 @@ class File(models.Model):
         verbose_name = 'File'
         verbose_name_plural = 'Files'
 
+    def filename(self):
+        return os.path.basename(self.file.name)
+
     def __str__(self):
-        return f'{self.file}'
+        return f'{self.name or self.file}'
