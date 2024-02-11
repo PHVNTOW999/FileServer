@@ -1,8 +1,10 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django import forms
+from .models import Folder
 
 
-class CreateUserFrom(UserCreationForm):
+class CreateUserForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['email', 'password1', 'password2']
@@ -14,3 +16,11 @@ class CreateUserFrom(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+class CreateFolderForm(forms.Form):
+    name = forms.CharField(label="Folder's name", required=True)
+
+    class Meta:
+        model = Folder
+        fields = ['name', ]

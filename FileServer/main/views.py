@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
-from .form import CreateUserFrom
+from .form import CreateUserForm, CreateFolderForm
 from .models import Folder, File
 
 
@@ -17,12 +17,19 @@ def indexPage(request):
 
 def foldersPage(request):
     if request.user.is_authenticated:
+        form = CreateFolderForm()
+
         if request.method == 'POST':
-            Folder.objects.create(name=request.POST.get('name'), user=request.user).save()
-            return redirect(request.path)
+            form = CreateFolderForm(request.POST)
+
+            if form.is_valid():
+                new_folder = Folder(name=form.cleaned_data['name'], user=request.user)
+                new_folder.save()
+
+                return redirect(request.path)
 
         folders = Folder.objects.filter(user=request.user)
-        ctx = {'folders': folders}
+        ctx = {'data': {'folders': folders, 'form': form}}
 
         return render(request, 'main/folders/folders.html', ctx)
 
@@ -33,7 +40,7 @@ def foldersPage(request):
 def folderPage(request, uuid):
     if request.user.is_authenticated:
 
-        files = File.objects.filter(folders__uuid=uuid, user=request.user)
+        files = File.objects.filter(folder__uuid=uuid, user=request.user)
         ctx = {'files': files}
 
         return render(request, 'main/folders/folder.html', ctx)
@@ -80,8 +87,7 @@ def fileUpdate(request, uuid):
 
 def del_file(request, uuid):
     if request.user.is_authenticated:
-        if request.method == 'POST':
-            File.objects.get(uuid=uuid, user=request.user).delete()
+        File.objects.get(uuid=uuid, user=request.user).delete()
 
         return redirect('files')
 
@@ -95,10 +101,9 @@ def regPage(request):
         return render(request, 'main/index.html')
 
     else:
-        form = CreateUserFrom()
+        form = CreateUserForm()
 
         if request.method == 'POST':
-
             try:
                 if User.objects.get(email=request.POST['email']):
                     messages.error(request,
@@ -109,7 +114,7 @@ def regPage(request):
                     return render(request, 'main/auth/reg.html', ctx)
 
             except User.DoesNotExist:
-                form = CreateUserFrom(request.POST)
+                form = CreateUserForm(request.POST)
 
                 if form.is_valid():
                     user = form.save(commit=False)

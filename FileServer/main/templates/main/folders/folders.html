@@ -12,7 +12,7 @@
                            name="name"
                            class="w-10/12 bg-white float-left text-black peer block min-h-[auto] rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear motion-reduce:transition-none"
                            id="exampleFormControlInput2"
-                           placeholder="Folder's name"
+                           placeholder="{{ data.form.name.label }}"
                            required/>
                     <input type="submit"
                            name="Create Folder"
@@ -22,9 +22,9 @@
                            value="Create"/>
                 </form>
             </div>
-            {% if folders %}
+            {% if data.folders %}
                 <div class="main grid grid-cols-8 gap-5 mt-10">
-                    {% for folder in folders %}
+                    {% for folder in data.folders %}
                         <div class="folder__del">
                             <a href="{% url 'del_folder' folder.uuid %}">delete</a>
                         </div>
