@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
-from .form import CreateUserForm, CreateFolderForm
+from .form import CreateUserForm, CreateFolderForm, CreateFileForm
 from .models import Folder, File
 
 
@@ -61,9 +61,28 @@ def del_folder(request, uuid):
 
 def filesPage(request):
     if request.user.is_authenticated:
+        form = CreateFileForm()
+
+        if request.method == 'POST':
+            form = CreateFileForm(request.POST, request.FILES)
+            print(request.POST)
+
+            if form.is_valid():
+                print('gg')
+                print(form.cleaned_data['folder'])
+
+                new_file = File(
+                    file=form.cleaned_data['file'],
+                    name=form.cleaned_data['name'],
+                    folder=form.cleaned_data['folder'],
+                    user=request.user)
+                new_file.save()
+
+                redirect('files')
+
         files = File.objects.filter(user=request.user)
         folders = Folder.objects.filter(user=request.user)
-        ctx = {'data': {'files': files, 'folders': folders}}
+        ctx = {'data': {'form': form, 'files': files, 'folders': folders}}
 
         return render(request, 'main/files/files.html', ctx)
 
