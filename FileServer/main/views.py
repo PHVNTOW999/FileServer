@@ -69,13 +69,21 @@ def filesPage(request):
 
             if form.is_valid():
                 print('gg')
-                print(form.cleaned_data['folder'])
+                # print(form)
 
                 new_file = File(
                     file=form.cleaned_data['file'],
                     name=form.cleaned_data['name'],
-                    folder=form.cleaned_data['folder'],
+                    # folder=form.cleaned_data['folder'],
                     user=request.user)
+
+                if form.cleaned_data['folder'] == 'None':
+                    new_file.folder = None
+                    print('rrr')
+                else:
+                    new_file.folder = form.cleaned_data['folder']
+                    print('ggg')
+
                 new_file.save()
 
                 redirect('files')
@@ -94,8 +102,14 @@ def fileUpdate(request, uuid):
     if request.user.is_authenticated:
         if request.method == 'POST':
             file = File.objects.get(uuid=uuid, user=request.user)
-            folder = Folder.objects.get(uuid=request.POST.get('folder'), user=request.user)
-            file.folder = folder
+
+            if request.POST['folder'] != 'None':
+                folder = Folder.objects.get(uuid=request.POST.get('folder'), user=request.user)
+                file.folder = folder
+            else:
+                file = File.objects.get(uuid=uuid, user=request.user)
+                file.folder = None
+
             file.save()
 
         return redirect('files')

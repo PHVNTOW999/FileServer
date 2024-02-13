@@ -38,25 +38,17 @@
                         <div class="createFrom___folder">
                             <select class="w-full text-black cursor-pointer bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     name="folder">
-                                <option class="cursor-pointer" value="Null" selected>None</option>
+                                <option value="None" selected>Select folder (option)</option>
 
-                                {% if data.folders %}
+                                {% if data.form.folder %}
 
-                                    {% for folder in data.folders %}
-                                        <option value="">{{ folder.uuid }}</option>
+                                    {% for folder in data.form.folder %}
+                                        {{ folder }}
                                     {% endfor %}
 
                                 {% endif %}
 
                             </select>
-                            {{ data.form }}
-
-{#                            {% for folder in data.form.folder %}#}
-{#                                {{ folder }}#}
-{#                                {{ folder.name }}#}
-{#                                {{ folder }}#}
-{#                                <option value="{{ folder }}">{{ folder.name }}</option>#}
-{#                            {% endfor %}#}
                         </div>
                         <div class="createForm__create col-span-2">
                             <input type="submit"
@@ -87,12 +79,16 @@
                                     <form method="POST" action="{% url 'fileUpdate' file.uuid %}">
                                         {% csrf_token %}
                                         <select class="text-black cursor-pointer" name="folder">
+                                            <option value="None">None</option>
                                             {% if file.folder and data.folders %}
-                                                <option class="cursor-pointer"
-                                                        value="{{ file.folder.uuid }}">{{ file.folder }}</option>
+                                                {% for folder in data.folders %}
+                                                    {% if folder.uuid == file.folder.uuid %}
+                                                        <option value="{{ folder.uuid }}" selected>{{ folder.name }}</option>
+                                                    {% else %}
+                                                        <option value="{{ folder.uuid }}">{{ folder.name }}</option>
+                                                    {% endif %}
+                                                {% endfor %}
                                             {% else %}
-                                                <option class="cursor-pointer" value="Null">None</option>
-
                                                 {% for folder in data.folders %}
                                                     <option value="{{ folder.uuid }}">{{ folder.name }}</option>
                                                 {% endfor %}
