@@ -1,7 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
-from requests import request
 
 from .models import Folder, File
 
@@ -31,12 +30,15 @@ class CreateFolderForm(forms.Form):
 class CreateFileForm(forms.Form):
     file = forms.FileField(label="File", required=True)
     name = forms.CharField(label="File's name", required=True)
-
-    queryset = Folder.objects.filter(email='test@gmail.com').distinct()
-
-    folder = forms.ModelChoiceField(queryset=queryset, empty_label=None, to_field_name='name', widget=forms.Select(),
-                                    required=False, blank=True)
+    folder = forms.ModelChoiceField(queryset=Folder.objects.all(), empty_label='Select folder (option)', to_field_name='name',
+                                    widget=forms.Select(), required=False, blank=True)
 
     class Meta:
         model = File
         fields = ['file', 'name', 'folder']
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        if user:
+            self.fields['folder'].queryset = Folder.objects.filter(user=user)

@@ -61,32 +61,22 @@ def del_folder(request, uuid):
 
 def filesPage(request):
     if request.user.is_authenticated:
-        form = CreateFileForm()
+        form = CreateFileForm(user=request.user)
+        # print(form['folder'].options)
 
         if request.method == 'POST':
-            form = CreateFileForm(request.POST, request.FILES)
-            print(request.POST)
+            form = CreateFileForm(request.POST, request.FILES, user=request.user)
 
             if form.is_valid():
-                print('gg')
-                # print(form)
-
                 new_file = File(
                     file=form.cleaned_data['file'],
                     name=form.cleaned_data['name'],
-                    # folder=form.cleaned_data['folder'],
+                    folder=form.cleaned_data['folder'],
                     user=request.user)
-
-                if form.cleaned_data['folder'] == 'None':
-                    new_file.folder = None
-                    print('rrr')
-                else:
-                    new_file.folder = form.cleaned_data['folder']
-                    print('ggg')
 
                 new_file.save()
 
-                redirect('files')
+                return redirect('files')
 
         files = File.objects.filter(user=request.user)
         folders = Folder.objects.filter(user=request.user)
