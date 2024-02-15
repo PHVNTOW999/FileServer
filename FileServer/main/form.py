@@ -27,11 +27,26 @@ class CreateFolderForm(forms.Form):
         fields = ['name', ]
 
 
+class UpdateFileForm(forms.Form):
+    folder = forms.ModelChoiceField(queryset=Folder.objects.all(), empty_label='None',
+                                    to_field_name='name', widget=forms.Select(), required=False, blank=True)
+
+    class Meta:
+        model = File
+        fields = ['folder']
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        if user:
+            self.fields['folder'].queryset = Folder.objects.filter(user=user)
+
+
 class CreateFileForm(forms.Form):
     file = forms.FileField(label="File", required=True)
     name = forms.CharField(label="File's name", required=True)
-    folder = forms.ModelChoiceField(queryset=Folder.objects.all(), empty_label='Select folder (option)', to_field_name='name',
-                                    widget=forms.Select(), required=False, blank=True)
+    folder = forms.ModelChoiceField(queryset=Folder.objects.all(), empty_label='Select folder (option)',
+                                    to_field_name='name', widget=forms.Select(), required=False, blank=True)
 
     class Meta:
         model = File

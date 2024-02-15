@@ -73,26 +73,18 @@
                                     </a>
                                 </div>
                                 <div class="file__selectFolder">
-
                                     <form method="POST" action="{% url 'fileUpdate' file.uuid %}">
                                         {% csrf_token %}
-                                        <select class="text-black cursor-pointer max-w-20" name="folder">
-                                            <option value="None">None</option>
-                                            {% if file.folder and data.folders %}
-                                                {% for folder in data.folders %}
-                                                    {% if folder.uuid == file.folder.uuid %}
-                                                        <option value="{{ folder.uuid }}" selected>{{ folder.name }}</option>
-                                                    {% else %}
-                                                        <option value="{{ folder.uuid }}">{{ folder.name }}</option>
-                                                    {% endif %}
-                                                {% endfor %}
-                                            {% else %}
-                                                {% for folder in data.folders %}
-                                                    <option value="{{ folder.uuid }}">{{ folder.name }}</option>
-                                                {% endfor %}
-                                            {% endif %}
-                                        </select>
+                                        <select class="text-black cursor-pointer max-w-20" name={{ data.updateForm.folder.name }}>
+                                            {% for folder in data.updateForm.folder %}
 
+                                                {% if folder.uuid == file.folder.uuid %}
+                                                    <option value="{{ folder }}">{{ folder }}</option>
+                                                {% else %}
+                                                    {{ folder }}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
                                         <input type="submit"
                                                name="Save File's Folder"
                                                class="bg-blue-500 hover:bg-blue-700 hover:cursor-pointer text-white font-bold py-1 px-2 rounded-full"

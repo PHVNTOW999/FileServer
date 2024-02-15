@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
-from .form import CreateUserForm, CreateFolderForm, CreateFileForm
+from .form import CreateUserForm, CreateFolderForm, CreateFileForm, UpdateFileForm
 from .models import Folder, File
 
 
@@ -62,7 +62,7 @@ def del_folder(request, uuid):
 def filesPage(request):
     if request.user.is_authenticated:
         form = CreateFileForm(user=request.user)
-        # print(form['folder'].options)
+        updateForm = UpdateFileForm(user=request.user)
 
         if request.method == 'POST':
             form = CreateFileForm(request.POST, request.FILES, user=request.user)
@@ -80,7 +80,7 @@ def filesPage(request):
 
         files = File.objects.filter(user=request.user)
         folders = Folder.objects.filter(user=request.user)
-        ctx = {'data': {'form': form, 'files': files, 'folders': folders}}
+        ctx = {'data': {'form': form, 'updateForm': updateForm, 'files': files, 'folders': folders}}
 
         return render(request, 'main/files/files.html', ctx)
 
@@ -89,21 +89,18 @@ def filesPage(request):
 
 
 def fileUpdate(request, uuid):
-    if request.user.is_authenticated:
-        if request.method == 'POST':
+    if request.user.is_authenticated and request.method == 'POST':
+        form = UpdateFileForm(request.POST, user=request.user)
+
+        if form.is_valid():
+            print(form.cleaned_data)
             file = File.objects.get(uuid=uuid, user=request.user)
-
-            if request.POST['folder'] != 'None':
-                folder = Folder.objects.get(uuid=request.POST.get('folder'), user=request.user)
-                file.folder = folder
-            else:
-                file = File.objects.get(uuid=uuid, user=request.user)
-                file.folder = None
-
+            # updateFile =
+            file.folder = form.cleaned_data['folder']
             file.save()
+            # updateFile.save()
 
-        return redirect('files')
-
+            return redirect('files')
     else:
         return redirect('reg')
 
