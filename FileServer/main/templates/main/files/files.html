@@ -32,20 +32,15 @@
                                    name="name"
                                    class="w-full bg-white float-left text-black peer block min-h-[auto] rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear motion-reduce:transition-none"
                                    id="exampleFormControlInput2"
-                                   placeholder="{{ data.form.name.label }}"
+                                   placeholder="{{ data.createForm.name.label }}"
                                    required/>
                         </div>
                         <div class="createFrom___folder">
                             <select class="w-full text-black cursor-pointer bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     name="folder">
-                                {% if data.form.folder %}
-
-                                    {% for folder in data.form.folder %}
-                                        {{ folder }}
+                                    {% for folder in data.createForm.folder %}
+                                        {{ folder }}">d
                                     {% endfor %}
-
-                                {% endif %}
-
                             </select>
                         </div>
                         <div class="createForm__create col-span-2">
@@ -64,7 +59,7 @@
                             <div class="file__name hover:text-teal-200 text-center truncate cursor-pointer">
                                 {{ file.filename }}
                             </div>
-                            <div class="file__options bg-gray-500 grid grid-cols-3 p-1">
+                            <div class="file__options bg-gray-500 grid grid-cols-[20%_60%_20%] p-1">
                                 <div class="file__del text-left mt-1">
                                     <a href="{% url 'del_file' file.uuid %}">
                                         <button class="bg-red-800 hover:bg-red-600 text-white font-bold px-2 rounded inline-flex items-center">
@@ -72,17 +67,20 @@
                                         </button>
                                     </a>
                                 </div>
-                                <div class="file__selectFolder">
+                                <div class="file__selectFolder text-center">
                                     <form method="POST" action="{% url 'fileUpdate' file.uuid %}">
                                         {% csrf_token %}
-                                        <select class="text-black cursor-pointer max-w-20" name={{ data.updateForm.folder.name }}>
-                                            {% for folder in data.updateForm.folder %}
+                                        <select class="text-black cursor-pointer max-w-20"
+                                                name={{ data.updateForm.folder.name }}>
+                                            <option value="None" selected>None</option>
+                                            {% for folder in data.updateForm.fields.folder.queryset %}
 
-                                                {% if folder.uuid == file.folder.uuid %}
-                                                    <option value="{{ folder }}">{{ folder }}</option>
+                                                {% if folder.uuid == file.folder.uuid and file.folder %}
+                                                    <option value="{{ folder }}" selected>{{ folder }}</option>
                                                 {% else %}
-                                                    {{ folder }}
+                                                    <option value="{{ folder }}">{{ folder }}</option>
                                                 {% endif %}
+
                                             {% endfor %}
                                         </select>
                                         <input type="submit"
@@ -91,9 +89,9 @@
                                                value="Save"/>
                                     </form>
                                 </div>
-                                <div class="file__download text-right mt-1">
+                                <div class="file__download mt-1">
                                     <a href="{{ file.file.url }}">
-                                        <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold px-2 rounded inline-flex items-center">
+                                        <button class="w-18 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold rounded inline-flex items-center">
                                             <span>Download</span>
                                         </button>
                                     </a>

@@ -61,17 +61,18 @@ def del_folder(request, uuid):
 
 def filesPage(request):
     if request.user.is_authenticated:
-        form = CreateFileForm(user=request.user)
+        createForm = CreateFileForm(user=request.user)
         updateForm = UpdateFileForm(user=request.user)
+        print(createForm.fields['folder'].queryset)
 
         if request.method == 'POST':
-            form = CreateFileForm(request.POST, request.FILES, user=request.user)
+            createForm = CreateFileForm(request.POST, request.FILES, user=request.user)
 
-            if form.is_valid():
+            if createForm.is_valid():
                 new_file = File(
-                    file=form.cleaned_data['file'],
-                    name=form.cleaned_data['name'],
-                    folder=form.cleaned_data['folder'],
+                    file=createForm.cleaned_data['file'],
+                    name=createForm.cleaned_data['name'],
+                    folder=createForm.cleaned_data['folder'],
                     user=request.user)
 
                 new_file.save()
@@ -79,8 +80,7 @@ def filesPage(request):
                 return redirect('files')
 
         files = File.objects.filter(user=request.user)
-        folders = Folder.objects.filter(user=request.user)
-        ctx = {'data': {'form': form, 'updateForm': updateForm, 'files': files, 'folders': folders}}
+        ctx = {'data': {'createForm': createForm, 'updateForm': updateForm, 'files': files}}
 
         return render(request, 'main/files/files.html', ctx)
 
@@ -93,12 +93,9 @@ def fileUpdate(request, uuid):
         form = UpdateFileForm(request.POST, user=request.user)
 
         if form.is_valid():
-            print(form.cleaned_data)
             file = File.objects.get(uuid=uuid, user=request.user)
-            # updateFile =
             file.folder = form.cleaned_data['folder']
             file.save()
-            # updateFile.save()
 
             return redirect('files')
     else:
