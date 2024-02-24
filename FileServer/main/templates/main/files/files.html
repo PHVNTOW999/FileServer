@@ -72,7 +72,7 @@
                                         {% csrf_token %}
                                         <select class="text-black cursor-pointer max-w-20"
                                                 name={{ data.updateForm.folder.name }}>
-                                            <option value="None" selected>None</option>
+                                            <option value="" selected>None</option>
                                             {% for folder in data.updateForm.fields.folder.queryset %}
 
                                                 {% if folder.uuid == file.folder.uuid and file.folder %}

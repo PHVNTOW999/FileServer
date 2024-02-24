@@ -63,7 +63,6 @@ def filesPage(request):
     if request.user.is_authenticated:
         createForm = CreateFileForm(user=request.user)
         updateForm = UpdateFileForm(user=request.user)
-        print(createForm.fields['folder'].queryset)
 
         if request.method == 'POST':
             createForm = CreateFileForm(request.POST, request.FILES, user=request.user)
@@ -91,8 +90,10 @@ def filesPage(request):
 def fileUpdate(request, uuid):
     if request.user.is_authenticated and request.method == 'POST':
         form = UpdateFileForm(request.POST, user=request.user)
+        print(request.POST)
 
         if form.is_valid():
+            print('gg')
             file = File.objects.get(uuid=uuid, user=request.user)
             file.folder = form.cleaned_data['folder']
             file.save()
