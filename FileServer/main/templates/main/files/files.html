@@ -32,8 +32,7 @@
                                    name="name"
                                    class="w-full bg-white float-left text-black peer block min-h-[auto] rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear motion-reduce:transition-none"
                                    id="exampleFormControlInput2"
-                                   placeholder="{{ data.createForm.name.label }}"
-                                   required/>
+                                   placeholder="{{ data.createForm.name.label }}" />
                         </div>
                         <div class="createFrom___folder">
                             <select class="w-full text-black cursor-pointer bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -57,9 +56,13 @@
                     {% for file in data.files %}
                         <div class="file grid grid-rows-[1fr] gap-2 p-2 h-18 bg-slate-600 rounded">
                             <div class="file__name hover:text-teal-200 text-center truncate cursor-pointer">
-                                {{ file.filename }}
+                                {% if file.name %}
+                                    {{ file.name }}
+                                {% else %}
+                                    {{ file.filename }}
+                                {% endif %}
                             </div>
-                            <div class="file__options bg-gray-500 grid grid-cols-[20%_60%_20%] p-1">
+                            <div class="file__options bg-gray-500 grid grid-cols-[20%_50%_30%] p-1">
                                 <div class="file__del text-left mt-1">
                                     <a href="{% url 'del_file' file.uuid %}">
                                         <button class="bg-red-800 hover:bg-red-600 text-white font-bold px-2 rounded inline-flex items-center">
@@ -89,7 +92,7 @@
                                                value="Save"/>
                                     </form>
                                 </div>
-                                <div class="file__download mt-1">
+                                <div class="file__download mt-1 text-center">
                                     <a href="{{ file.file.url }}">
                                         <button class="w-18 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold rounded inline-flex items-center">
                                             <span>Download</span>

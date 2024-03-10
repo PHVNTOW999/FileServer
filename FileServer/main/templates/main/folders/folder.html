@@ -2,8 +2,112 @@
 
 {% block ctn %}
 
-    <h1 class="text-3xl font-bold underline">
-        Hello gg!
-    </h1>
+    <div class="folder">
+        {% if data.createForm %}
+            <div class="folder__create">
+                <div class="wrap grid grid-cols-4 gap-5">
+                    <form class="grid grid-colm-2 gap-4 col-start-2 col-span-2" method="POST" action="{% url 'files' %}"
+                          enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="createFrom___file col-span-2 flex items-center justify-center w-full">
+                            <label for="dropzone-file"
+                                   class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                    <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                              stroke-width="2"
+                                              d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"></path>
+                                    </svg>
+                                    <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span
+                                            class="font-semibold">Click to upload</span> or drag and drop</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX.
+                                        800x400px)</p>
+                                </div>
+                                <input id="dropzone-file" class="hidden" type="file" name="file" required/>
+                            </label>
+                        </div>
+                        <div class="createFrom___name">
+                            <input type="text"
+                                   name="name"
+                                   class="w-full bg-white float-left text-black peer block min-h-[auto] rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear motion-reduce:transition-none"
+                                   id="exampleFormControlInput2"
+                                   placeholder="{{ data.createForm.name.label }}"
+                                   required/>
+                        </div>
+                        <div class="createFrom___folder">
+                            <select class="w-full text-black cursor-pointer bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    name="folder">
+                                {% for folder in data.createForm.folder %}
+                                    {{ folder }}">d
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="createForm__create col-span-2">
+                            <input type="submit"
+                                   name="Save File's Folder"
+                                   class="w-full bg-blue-500 hover:bg-blue-700 hover:cursor-pointer text-white font-bold py-1 px-2 rounded"
+                                   value="Upload File"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+        {% if data.files %}
+            <div class="folder__files">
+                <div class="main grid grid-cols-4 gap-5 mt-10">
+                    {% for file in data.files %}
+                        <div class="file grid grid-rows-[1fr] gap-2 p-2 h-18 bg-slate-600 rounded">
+                            <div class="file__name hover:text-teal-200 text-center truncate cursor-pointer">
+                                {% if file.name %}
+                                    {{ file.name }}
+                                {% else %}
+                                    {{ file.filename }}
+                                {% endif %}
+                            </div>
+                            <div class="file__options bg-gray-500 grid grid-cols-[20%_50%_30%] p-1">
+                                <div class="file__del text-left mt-1">
+                                    <a href="{% url 'del_file' file.uuid %}">
+                                        <button class="bg-red-800 hover:bg-red-600 text-white font-bold px-2 rounded inline-flex items-center">
+                                            <span>Delete</span>
+                                        </button>
+                                    </a>
+                                </div>
+                                <div class="file__selectFolder text-center">
+                                    <form method="POST" action="{% url 'fileUpdate' file.uuid %}">
+                                        {% csrf_token %}
+                                        <select class="text-black cursor-pointer max-w-20"
+                                                name={{ data.updateForm.folder.name }}>
+                                            <option value="" selected>None</option>
+                                            {% for folder in data.updateForm.fields.folder.queryset %}
+
+                                                {% if folder.uuid == file.folder.uuid and file.folder %}
+                                                    <option value="{{ folder }}" selected>{{ folder }}</option>
+                                                {% else %}
+                                                    <option value="{{ folder }}">{{ folder }}</option>
+                                                {% endif %}
+
+                                            {% endfor %}
+                                        </select>
+                                        <input type="submit"
+                                               name="Save File's Folder"
+                                               class="bg-blue-500 hover:bg-blue-700 hover:cursor-pointer text-white font-bold py-1 px-2 rounded-full"
+                                               value="Save"/>
+                                    </form>
+                                </div>
+                                <div class="file__download mt-1 text-center">
+                                    <a href="{{ file.file.url }}">
+                                        <button class="w-18 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold rounded inline-flex items-center">
+                                            <span>Download</span>
+                                        </button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
 
 {% endblock %}

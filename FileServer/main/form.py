@@ -44,7 +44,7 @@ class UpdateFileForm(forms.Form):
 
 class CreateFileForm(forms.Form):
     file = forms.FileField(label="File", required=True)
-    name = forms.CharField(label="File's name", required=True)
+    name = forms.CharField(label="File's name (optional)", required=False)
     folder = forms.ModelChoiceField(queryset=Folder.objects.all(), empty_label='Select folder (option)',
                                     to_field_name='name', widget=forms.Select(), required=False, blank=True)
 

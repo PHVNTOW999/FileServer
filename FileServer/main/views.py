@@ -40,8 +40,12 @@ def foldersPage(request):
 def folderPage(request, uuid):
     if request.user.is_authenticated:
 
+        createForm = CreateFileForm(user=request.user)
+        updateForm = UpdateFileForm(user=request.user)
         files = File.objects.filter(folder__uuid=uuid, user=request.user)
-        ctx = {'files': files}
+
+        folders = Folder.objects.filter(user=request.user)
+        ctx = {'data': {'folders': folders, 'files': files, 'updateForm': updateForm, 'createForm': createForm}}
 
         return render(request, 'main/folders/folder.html', ctx)
 
